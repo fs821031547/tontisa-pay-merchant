@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>在线支付</title>
+  <link rel="stylesheet" href="https://cdn.op110.com.cn/lib/css/reset.css">
+  <link rel="stylesheet" href="https://cdn.op110.com.cn/lib/css/short.css">
+  <style>
+    body {
+      position: relative;
+      background-color: #eee;
+    }
+    .wrapper {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      margin-left: -250px;
+      background-color: #fff;
+      width: 500px;
+      padding: 160px 0;
+      text-align: center;
+      box-sizing: border-box;
+      box-shadow: 0 0 20px 12px rgba(0, 0, 0, .02)
+    }
+    .wrapper p {
+      padding-top: 25px;
+      font-size: 24px;
+      color: #525252;
+    }
+    .wrapper p.info {
+      padding: 0 40px;
+      margin-top: 5px;
+      font-size: 14px;
+      color: #777;
+    }
+    .wrapper .return {
+      display: inline-block;
+      width: 135px;
+      line-height: 35px;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #808080;
+    }
+    .wrapper .return:hover {
+      color: #fff;
+      background: #00b7ee;
+      border-color: #00b7ee;
+    }
+    .hide {
+      display: none;
+    }
+  </style>
+  <body>
+    <div class="wrapper">
+      <img src="https://cdn.op110.com.cn/lib/imgs/codepay/icon_fail.png" class="{{'hide' if isSuccess else ''}}">
+      <img src="https://cdn.op110.com.cn/lib/imgs/codepay/pay.png" class="{{ '' if isSuccess else 'hide' }}">
+      <p>{{msg}}</p>
+      <p class="info">{{desc | safe}}</p>
+    </div>
+  </body>
+</html>

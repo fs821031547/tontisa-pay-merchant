@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>待支付信息</title>
+    <link rel="stylesheet" href="https://cdn.op110.com.cn/lib/css/reset.css">
+    <link rel="stylesheet" href="https://cdn.op110.com.cn/lib/css/short.css">
+    <style>
+      html, body{ width: 100%; height: 100%;}
+      body{ position: relative; background-color: #eee;}
+      .wrapper{ position: absolute; left: 50%; padding-top: 50px; margin-left: -250px; width: 500px;}
+      .wrapper .body{ padding: 40px 24px; box-sizing: border-box; background-color: #fff;}
+      .wrapper .body .hd{ padding-bottom: 15px; border-bottom: 1px dashed #888; color: #000;}
+      .wrapper .body .hd span{ float: left; font-size: 26px;}
+      .wrapper .body .hd p{ float: right; line-height: 30px; font-size: 46px; color: #404040;}
+      .wrapper .body .bd .box{ padding: 15px 0; border-bottom: 1px dashed #eee; font-size: 16px; color: #808080;}
+      .wrapper .body .bd p{ line-height: 30px;}
+      .wrapper .body .bd span{ float: left; width: 332px;}
+      .wrapper .body .bd .title{ display: inline-block; width: 70px; padding-right: 50px; text-align: right; color: #000;}
+      .wrapper .body .bd .box:nth-last-child(1){ border-bottom: 1px dashed #888;}
+      .wrapper .body .ft{ padding: 25px 0 0; font-size: 14px; color: #808080; text-align: center;}
+      .wrapper .body .ft .tab {position: relative;}
+      .wrapper .body .ft .tab-split {position:absolute; top:34px; width:100%; border-bottom: 1px solid #808080;}
+      .wrapper .body .ft .tab-hd {position: relative; background-color:#fff; display: inline-block; width: 110px; height: 35px; line-height: 35px; margin:0 5px; font-size: 16px; cursor: pointer; border: 1px solid #808080; border-top-right-radius: 5px; border-top-left-radius: 5px; box-sizing: border-box;}
+      .wrapper .body .ft .tab .actived {border-bottom:1px solid #fff;}
+      .wrapper .body .ft .box {padding-top:10px;}
+      .wrapper .body .ft img{ width: 180px; height: 180px;}
+      .wrapper .foot{ padding-top: 25px; color: #808080;}
+      .wrapper .foot .btn-group{ text-align: center;}
+      .wrapper .foot .btn{ position: relative; display: inline-block; width: 140px; height: 35px; line-height: 35px; padding-left: 30px; margin: 0 10px; font-size: 16px; border: 1px solid #808080; border-radius: 5px; box-sizing: border-box; cursor: default;}
+      .wrapper .foot .btn .tips{ display: none; position: absolute; bottom: 44px; left: -1px; width: 140px; height: 140px; box-sizing: border-box; padding: 5px; background-color: #fff; box-shadow: 0 0 3px 2px #eee;}
+      .wrapper .foot .btn .tips p{ position: relative;}
+      .wrapper .foot .btn .tips p:after{ display: block; position: absolute; left: 9px; bottom: -13px; content: ""; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #fff;}
+      .wrapper .foot .btn .tips img{ width: 100%;}
+      .wrapper .foot .btn-wecode{ background: url("https://cdn.op110.com.cn/lib/imgs/codepay/icon_wecode.png") 14px 7px no-repeat;}
+      .wrapper .foot .btn:hover{ color: #fff; border: 1px solid #00b7ee;}
+      .wrapper .foot .btn-wecode:hover{ background: #00b7ee url("https://cdn.op110.com.cn/lib/imgs/codepay/icon_wecode.png") 14px -74px no-repeat;}
+      .wrapper .foot .btn-wecode:hover .tips{ display: block;}
+      .wrapper .foot .btn-gun{ background: url("https://cdn.op110.com.cn/lib/imgs/codepay/icon_gun.png") 14px 7px no-repeat; cursor: pointer; }
+      .wrapper .foot .btn-gun:hover{ background: #00b7ee url("https://cdn.op110.com.cn/lib/imgs/codepay/icon_gun.png") 14px -72px no-repeat;}
+      .wrapper .foot .copy{ padding-top: 15px; padding-bottom: 30px;}
+      .wrapper .foot .copy .ipt-link{ float: left; width: 410px; height: 30px; padding: 0 10px; font-size: 14px; font-family: 'Microsoft Yahei'; color: #808080; border: 1px solid #dcdcdc; box-sizing: border-box; background: none;}
+      .wrapper .foot .copy .btn-copy{ float: left; width: 90px; height: 30px; color: #333; font-size: 14px; box-sizing: border-box; background: #dcdcdc; border: none;}
+      .wrapper .foot .copy .btn-copy:hover{ background: #ccc;}
+      .overaly{ display: none; position: fixed; width: 100%; height: 100%; background-color: rgba(0,0,0,.5); overflow: hidden;}
+      .scan-box{ display: none; position: fixed; top: 50%; left: 50%; width: 500px; height: 300px; margin: -150px 0 0 -250px; background-color: #fff; box-sizing: border-box; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,.25);}
+      .scan-box .box{ height: 50px; position: relative;}
+      .scan-box .box .tips{ display: none; position: absolute; top: 60px; left: 0; width: 100%; line-height: 74px; font-size: 16px; text-align: center;}
+      .scan-box .box p{ height: 60px; line-height: 60px; padding: 0 20px; margin-bottom: 75px; border-bottom: 1px solid #ccc; box-sizing: border-box;}
+      .scan-box .box .title{ font-size: 18px;}
+      .scan-box .box .close{ display: inline-block; float: right; width: 24px; height: 24px; margin-top: 18px; background: url('https://cdn.op110.com.cn/lib/imgs/codepay/icon_close.png') no-repeat; cursor: pointer;}
+      .scan-box .box form{ padding: 0 40px;}
+      .scan-box .box .number{ width: 100%; height: 70px; padding: 0 10px; font-size: 26px; border: none; border-radius: 2px; box-sizing: border-box; box-shadow: 0 0 4px 0 #999;}
+      .hide {display: none;}
+      .bold {font-weight:bolder;}
+      .weixin {color: #009900;}
+      .alipay {color: #35a4f3;}
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="body">
+        <div class="hd clearfix">
+          <span class="title">{{moneyTitle}}</span>
+          <p class="{{hasMoney}}">&yen;{{money}}</p>
+        </div>
+        <div class="bd">
+          <div class="box">
+            <p class="clearfix">
+              <span class="title">收款方</span>
+              <span>{{merchantName}}</span>
+            </p>
+            <p class="clearfix{{hasEmployeeName}}">
+              <span class="title">发起人</span>
+              <span>{{employeeName}}</span>
+            </p>
+          </div>
+          <div class="box{{hasRemarks}}">
+            <p class="clearfix{{hasOrderId}}">
+              <span class="title">订单号</span>
+              <span>{{orderId}}</span>
+            </p>
+            <p class="clearfix{{hasRemark}}">
+              <span class="title">收款摘要</span>
+              <span>{{remark}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="ft">
+          <div class="tab">
+            <div class="tab-split"></div>
+            <div class="tab-hd actived" data-channel="alipay">支付宝扫码</div>
+            <div class="tab-hd" data-channel="wxpay">微信扫码</div>
+            <div class="tab-hd" data-channel="ylpay">银联二维码</div>
+          </div>
+          <div class="box qrcode qrcode-alipay">
+            <img src="{{qrCode}}" data-load="loaded">
+            <p>请打开支付宝「扫一扫」扫描二维码</p>
+          </div>
+          <div class="box qrcode qrcode-wxpay hide">
+            <img src="https://cdn.op110.com.cn/lib/imgs/codepay/preview-qr-place.png">
+            <p>请打开微信「扫一扫」扫描二维码</p>
+          </div>
+          <div class="box qrcode qrcode-ylpay hide">
+            <img src="https://cdn.op110.com.cn/lib/imgs/codepay/preview-qr-place.png">
+            <p>请打开支持银联二维码的应用扫码</p>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <!-- <div class="btn-group">
+          <span id="btnScanner" class="btn btn-gun"{{hasMoneyShow}}>
+            调用扫码枪
+          </span>
+        </div> -->
+        <div class="copy clearfix">
+          <input type="text" id="iptLink" class="ipt-link" value="{{infoAction}}" readonly>
+          <button type="button" class="btn-copy" data-clipboard-target="#iptLink">复制链接</button>
+        </div>
+      </div>
+    </div>
+    <div class="overaly pop"></div>
+    <div class="scan-box pop">
+      <div class="box">
+        <p>
+          <span class="title">扫描用户 <span class="weixin">微信</span> 或 <span class="alipay">支付宝</span> 付款码</span>
+          <span class="close" title="关闭"></span>
+        </p>
+        <div class="tips">交易处理中，请稍后...</div>
+        <form action="">
+          <input id="payNumber" type="text" class="number" name="number" placeholder="请扫描用户付款条码" autocomplete="off">
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.op110.com.cn/controls/jquery/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.op110.com.cn/lib/js/layer/3.0.3/layer.js"></script>
+    <script src="https://cdn.op110.com.cn/lib/js/clipboard/clipboard.min.js"></script>
+    <script>
+      try{ var details = {{details}}; var listHtml = '<div class="box">';
+      var len = details.length;for (var i=0;i<len;i++) {
+        listHtml += '<p class="clearfix"><span class="title">' + details[i].key + '</span><span>' + details[i].value + '</span></p>';
+      }listHtml += '</div>'; if(len>0){$('.bd').append(listHtml);}
+      } catch(e) {}
+      var clipboard = new Clipboard('.btn-copy');  //复制链接
+      clipboard.on('success', function(e) {layer.msg('付款链接已经复制到剪贴板', {time:1000});e.clearSelection();});
+      $('.ft>.tab>.tab-hd').on('click', function() {
+        var channel = $(this).attr('data-channel');
+        $('.ft>.tab>.tab-hd').removeClass('actived');
+        $(this).addClass('actived');
+        $('.ft .qrcode').hide();
+        $('.ft .qrcode-' + channel).show();
+        var img = $('.ft .qrcode-' + channel).find('img');
+        if (img.attr('data-load') != 'loaded'){
+          $.post('{{formAction}}', {key: '{{tradeKey}}', payChannel: channel.toUpperCase()}, function(data) {
+            if (data.executeStatus == '0' && data.values && data.values.payCode){
+              img.attr('src', 'https://pan.baidu.com/share/qrcode?w=200&h=200&url=' + encodeURIComponent(data.values.payCode));
+              img.attr('data-load', 'loaded');
+            } else {
+              layer.msg(data.errorMsg ? (data.errorDes ? data.errorMsg + '：' + data.errorDes : data.errorMsg) : '生成二维码错误，请稍候再试', {shift:6, time:10000});
+            }
+          }, 'json');
+        }
+      });
+      //输入框每四位一空格
+      function numSpace(id) {
+        $(id).on('keyup mouseout input',function(){
+          var $this = $(this),
+              thisVal = $this.val();
+          /\S{5}/.test(thisVal) && $this.val(thisVal.replace(/\s/g,'').replace(/(.{4})/g, "$1 "));
+        });
+      }
+      numSpace('#payNumber');
+      //调用扫码枪
+      $('#btnScanner').on('click', function() {
+        $('.pop').show();
+        $('#payNumber').focus();
+      })
+      $('.close').on('click', function() {
+        $('.pop').hide();
+      })
+      $("body").keydown(function() {
+        if(event.keyCode == '27') {
+          if($('.pop').css('display') == 'block') {
+            $('.pop').hide();
+          }
+        }
+        if(event.keyCode == "13") {
+          if($('.pop').css('display') == 'block') {
+            if($('#payNumber').val() == '') {
+              layer.msg('用户付款码不能为空', {shift: 6});
+              return false;
+            } else {
+              $('.scan-box .tips').text('处理中，请稍后...').show();
+              $('#payNumber').blur();
+              $.post('{{scanAction}}', {code: $('#payNumber').val().replace(/\s/g, '')}, 
+                     function(data){
+                       if (data.executeStatus === 0) {
+                         $('.scan-box .tips').text('支付成功！');
+                         $('#payNumber').val('');
+                         setTimeout(function() { $('.pop').hide(); }, 1000);
+                       } else {
+                         $('.scan-box .tips').text('支付失败！' + data.errorMsg);
+                         $('#payNumber').val('').focus();
+                       }
+                     }, 'json');
+              return false;
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
