@@ -13,7 +13,7 @@ module.exports = config => {
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),
-    new CleanWebpackPlugin([ '*.*' ], {
+    new CleanWebpackPlugin([ '**/*.*' ], {
       root: path.resolve(__dirname, '../app/public'),
       verbose: true,
     }),
