@@ -10,6 +10,7 @@ const serve = require('./webpack.serve.js');
 
 const config = {
   assetsPublicPath: '/',
+  sourceMap: true,
 };
 
 const devConfig = {
@@ -25,12 +26,14 @@ const devConfig = {
   extract: false,
   // devtool: '#eval-source-map',
   devtool: '#source-map',
+  sourceMap: true,
 };
 
 const buildConfig = {
   useEslint: true,
   extract: true,
   devtool: '#source-map',
+  sourceMap: false,
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -80,12 +83,6 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-      },
-      {
-        test: /\.html$/,
-        use: {
-          loader: 'html-loader',
-        },
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -146,26 +143,12 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'extends',
-      minChunks(module) {
-        return module.resource &&
-          (/source(\\|\/)extends/.test(module.resource) ||
-            /node_modules(\\|\/)axios/.test(module.resource) ||
-            /node_modules(\\|\/)echarts/.test(module.resource) ||
-            /node_modules(\\|\/)element-ui/.test(module.resource));
-      },
-      chunks: [ 'app' ],
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
       minChunks(module, count) {
         return (
           module.resource && count >= 1 &&
           module.resource.indexOf('node_modules') >= 0 &&
-          (!(/source(\\|\/)extends/.test(module.resource))) &&
-          (!(/node_modules(\\|\/)axios/.test(module.resource))) &&
-          (!(/node_modules(\\|\/)echarts/.test(module.resource))) &&
-          (!(/node_modules(\\|\/)element-ui/.test(module.resource)))
+          (!(/node_modules(\\|\/)echarts/.test(module.resource)))
         );
       },
       chunks: [ 'app' ],
@@ -181,8 +164,10 @@ module.exports = {
       chunksSortMode: 'manual',
       chunks: [
         'manifest', 'common',
-        'extends', 'app',
+        'app',
       ],
+      title: '同天下支付系统',
+      favicon: 'source/assets/favicon.ico',
     }),
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
@@ -193,7 +178,7 @@ module.exports = {
   performance: {
     hints: false,
   },
-  devtool: config.devtool,
+  devtool: config.sourceMap ? config.devtool : false,
 };
 
 if (config.extract) {
@@ -205,7 +190,9 @@ if (config.extract) {
     allChunks: false,
   }),
   new OptimizeCSSPlugin({
-    cssProcessorOptions: { safe: true, map: { inline: false } },
+    cssProcessorOptions: config.sourceMap
+      ? { safe: true, map: { inline: false } }
+      : { safe: true },
   }));
 }
 
@@ -227,14 +214,18 @@ function cssLoaders() {
     const loaders = [
       {
         loader: 'css-loader',
+        options: {
+          sourceMap: config.sourceMap,
+        },
       },
       {
         loader: 'postcss-loader',
         options: {
-          sourceMap: true,
+          sourceMap: config.sourceMap,
         },
       },
     ];
+    loaderOptions = loaderOptions ? Object.assign(loaderOptions, { sourceMap: config.sourceMap }) : { sourceMap: config.sourceMap };
     if (loader) {
       loaders.push({
         loader: loader + '-loader',

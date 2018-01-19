@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>ttx-pay-merchant</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
     <style type="text/css">
       @font-face {
         font-family: 'Source Han Sans';
@@ -13,6 +13,11 @@
         url('//at.alicdn.com/t/webfont_g3ruean7o5iv0a4i.svg#NotoSansHans-DemiLight') format('svg'); /* iOS 4.1- */
       }
     </style>
+    <% for (var chunk of webpack.chunks) {
+            for (var file of chunk.files) {
+              if (file.match(/\.(js|css|woff)$/)) { %>
+      <link rel="<%= (chunk.initial || file.includes('pages/'))?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':(file.match(/\.woff$/)?'font':'script')%>">
+    <% }}} %>
   </head>
   <body>
     <div id="app"></div>
