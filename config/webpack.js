@@ -97,7 +97,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 1000,
-          name: path.posix.join('img/[name].[hash:8].[ext]'),
+          name: path.posix.join('media/[name].[hash:8].[ext]'),
         },
       },
       {
@@ -105,7 +105,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 1000,
-          name: path.posix.join('img/[name].[hash:8].[ext]'),
+          name: path.posix.join('font/[name].[hash:8].[ext]'),
         },
       },
       ...styleLoaders(),

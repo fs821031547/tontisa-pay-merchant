@@ -15,8 +15,8 @@
     </style>
     <% for (var chunk of webpack.chunks) {
             for (var file of chunk.files) {
-              if (file.match(/\.(js|css|woff)$/)) { %>
-      <link rel="<%= (chunk.initial || file.includes('pages/'))?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':(file.match(/\.woff$/)?'font':'script')%>">
+              if (file.match(/\.(js|css|woff2?|eot|ttf|otf)$/)) { %>
+      <link rel="<%= (chunk.initial || file.includes('pages/'))?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':(file.match(/\.(woff2?|eot|ttf|otf)$/)?'font':'script')%>">
     <% }}} %>
   </head>
   <body>
