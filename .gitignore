@@ -4,7 +4,7 @@ dist/
 npm-debug.log
 yarn-error.log
 run
-log
+logs
 app/public
 
 # Editor directories and files

@@ -1,6 +1,7 @@
 module.exports = app => {
   // app.router.opts.prefix = '/'; // 为所有路由设置前缀
   const userSession = app.middlewares.userSession();
+  app.get('/', 'index.index'); // 登录
 
   app.post('/api/user/sign', 'user.sign'); // 登录
   app.post('/api/user/sign/newpass', 'user.signWithNewPass'); // 修改密码并登录

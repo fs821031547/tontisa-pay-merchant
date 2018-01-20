@@ -183,11 +183,11 @@ module.exports = {
 
 if (config.extract) {
   module.exports.plugins.push(new ExtractTextPlugin({
-    filename: config.assetsPublicPath + '[name].[contenthash:8].css',
+    filename: '[name].[contenthash:8].css',
     // set the following option to `true` if you want to extract CSS from
     // codesplit chunks into this main css file as well.
     // This will result in *all* of your app's CSS being loaded upfront.
-    allChunks: false,
+    allChunks: true,
   }),
   new OptimizeCSSPlugin({
     cssProcessorOptions: config.sourceMap

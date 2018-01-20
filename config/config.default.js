@@ -15,14 +15,15 @@ module.exports = appInfo => {
       '/favicon.ico': fs.readFileSync(path.join(process.cwd(), '/app/public/favicon.ico')),
     },
     view: {
+      root: [
+        path.join(appInfo.baseDir, 'app/view'),
+        path.join(appInfo.baseDir, 'app/public'),
+      ].join(','),
       mapping: {
         '.njk': 'nunjucks',
       },
       defaultViewEngine: 'nunjucks',
       defaultExtension: '.njk',
-    },
-    notfound: {
-      pageUrl: '/404.html',
     },
     logger: {
       dir: path.join(appInfo.baseDir, 'logs'),
