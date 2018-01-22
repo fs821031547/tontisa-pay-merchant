@@ -11,7 +11,7 @@ class LocalEggBinCommand extends EggBin.DevCommand {
     const devArgs = yield this.formatArgs(context);
     const options = {
       execArgv: context.execArgv,
-      env: Object.assign({ NODE_ENV: 'development', EGG_SERVER_ENV: 'local' }, context.env),
+      env: Object.assign({ NODE_ENV: 'development', EGG_SERVER_ENV: 'dev' }, context.env),
     };
     debug('%s %j %j, %j', this.serverBin, devArgs, options.execArgv, options.env.NODE_ENV);
     yield this.helper.forkNode(this.serverBin, devArgs, options);
