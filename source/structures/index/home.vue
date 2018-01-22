@@ -70,7 +70,7 @@
               <span>{{tradeRatioPayTypeLabel[item.payType]}}</span>
               <span>|</span>
               <span>{{item[tradeRatioPayTypeSelect.ratio]}}%</span>
-              <span>￥{{item[tradeRatioPayTypeSelect.number]}}</span>
+              <span>￥{{item[tradeRatioPayTypeSelect.number] | moneyFmt}}</span>
             </div>
           </div>
         </el-card>
@@ -414,7 +414,8 @@ export default {
       const select = this.tradeRatioPayTypeSelect;
       const color = this.tradeRatioPayTypeColor;
       if (stats && stats.payTypeStats && stats.payTypeStats.length) {
-        for (const payType in stats.payTypeStats) {
+        for (const i in stats.payTypeStats) {
+          const payType = stats.payTypeStats[i];
           if (payType.fake) {
             datas.push({
               value: 0,

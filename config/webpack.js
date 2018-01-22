@@ -17,7 +17,7 @@ const devConfig = {
   proxyTable: {
     '/api': 'http://localhost:7001',
   },
-  host: '192.168.110.232',
+  host: '192.168.110.247',
   port: 8080,
   autoOpenBrowser: false,
   poll: false,
@@ -147,8 +147,7 @@ module.exports = {
       minChunks(module, count) {
         return (
           module.resource && count >= 1 &&
-          module.resource.indexOf('node_modules') >= 0 &&
-          (!(/node_modules(\\|\/)echarts/.test(module.resource)))
+          module.resource.indexOf('node_modules') >= 0
         );
       },
       chunks: [ 'app' ],
@@ -166,7 +165,7 @@ module.exports = {
         'manifest', 'common',
         'app',
       ],
-      title: '同天下支付系统',
+      title: '小强扫码付',
       favicon: 'source/assets/favicon.ico',
     }),
     new FriendlyErrorsPlugin({

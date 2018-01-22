@@ -22,19 +22,18 @@
     </div>
     <div class="foot-block">
       <div>
-        <span>
-          <a href="http://tontisa.com/about.html" target="_blank">公司简介</a>　|　
-          <a href="http://tontisa.com/#" target="_blank">加入我们</a>　|　
-          <a href="http://tontisa.com/contact.html" target="_blank">联系我们</a>　|　
-          <a href="http://tontisa.com/pay.html" target="_blank">付款账号</a>　|　
-          <a href="http://tontisa.com/tds.html" target="_blank">TDS论坛</a>
-        </span>
-        <span>工作时间：周一至周六09:00~18:00</span>
-        <span>公司地址：深圳市龙岗区力嘉路108号2013文化创客园A312-314</span>
+        <a href="http://tontisa.com/about.html" target="_blank">公司简介</a>
+        <span class="link-split">|</span>
+        <a href="http://tontisa.com/#" target="_blank">加入我们</a>
+        <span class="link-split">|</span>
+        <a href="http://tontisa.com/contact.html" target="_blank">联系我们</a>
+        <span class="link-split">|</span>
+        <a href="http://tontisa.com/pay.html" target="_blank">付款账号</a>
+        <span class="link-split">|</span>
+        <a href="http://tontisa.com/tds.html" target="_blank">TDS论坛</a>
       </div>
       <div>
-        <div></div>
-        <div>0755-89332966</div>
+        <span>深圳同天下科技有限公司 版权所有 © TONTISA.COM 粤ICP备13025331号</span>
       </div>
     </div>
   </div>
@@ -68,6 +67,7 @@ $blank = 12%
 .page-sign
   height 100%
   width 100%
+  min-height 736px
   .top-block
     height 80px
     background-color #fff
@@ -81,14 +81,14 @@ $blank = 12%
     padding-left 205px
   .head-block
     width 100%
-    height calc(100% - 180px)
+    height calc(100% - 160px)
     background-image url('../assets/sign_banner.jpg')
     .banner-block
       color #fff
       float left
       width 100%
       height 100%
-      background-color rgba(0, 0, 0, 0.5)
+      background-color rgba(38,60,103,0.2)
       >div
         width 660px
         padding-top 13%
@@ -105,37 +105,24 @@ $blank = 12%
       padding-right $blank
       width 336px
   .foot-block
-    height 100px
+    height 80px
     width 100%
-    color #fff
+    color #909399
     font-size 14px
-    background #333333
-    > div:nth-child(1)
-      float left
-      padding-left $blank
-      span
-        display block
-        padding-top 10px
+    background #fff
+    text-align center
+    div
+      padding-top 10px
+    div:last-child
+      color #C0C4CC
+    a
+      text-decoration none
+      color #909399
+      display inline-block
+      &:hover
         color #C0C4CC
-        a
-          text-decoration none
-          cursor pointer
-          color #DCDFE6
-          &:hover
-            color #F2F6FC
-      span:nth-child(1)
-        color #F2F6FC
-    > div:nth-child(2)
-      float right
-      padding-right $blank
-      opacity 0.4
-      div:nth-child(1)
-        width 180px
-        height 44px
-        background url('../assets/logo-bottom.png')
-        background-repeat no-repeat
-        background-position left top 10px
-      div:nth-child(2)
-        font-size 26px
-        padding-top 10px
+    .link-split
+      margin -2px 18px
+      font-size 16px
+      color #C0C4CC
 </style>

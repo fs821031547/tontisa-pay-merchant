@@ -137,7 +137,7 @@ export default {
       const now = Date.now();
       const localStorage = window.localStorage;
       let firstTime = Number(localStorage.getItem('sendCodeBtnTime'));
-      firstTime = isNaN(firstTime) ? now : firstTime;
+      firstTime = isNaN(firstTime) ? now : Number(firstTime);
       let startSecond;
       if (firstTime && now - firstTime <= 60000) { // 60 s
         startSecond = (now - firstTime) / 1000;
@@ -146,7 +146,7 @@ export default {
         startSecond = 60;
         localStorage.setItem('sendCodeBtnTime', now);
       }
-      if (startSecond <= 0) return;
+      if (startSecond <= 0 || !startSecond) return;
       this.sendCodeDisable = true;
       let labelInterval = setInterval(() => {
         this.sendCodeDisableLabel = `(${startSecond})`;

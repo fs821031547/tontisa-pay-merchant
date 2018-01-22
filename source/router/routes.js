@@ -16,6 +16,9 @@ const routes = [
         name: 'user',
         label: '用户中心',
         component: () => import(/* webpackChunkName: "structures/user/info" */ '../structures/user/info'),
+        meta: {
+          display: false,
+        },
       },
       {
         path: '/merchant',

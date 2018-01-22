@@ -25,15 +25,11 @@ module.exports = app => {
     }
     async tradeStats(body = {}) {
       this.userInj(body);
-      body.payedTimeStart = '2017-12-29 00:00:00';
-      body.payedTimeEnd = '2018-01-05 23:59:59';
       const result = await this.apiPost('/tradeSeq/getTradeSeqCount', body);
       return result.data.data;
     }
     async payTypeStats(body = {}) {
       this.userInj(body);
-      body.startDate = '2017-12-29 00:00:00';
-      body.endDate = '2018-01-05 23:59:59';
       const result = await this.apiPost('/tradeSeq/getTradeSeqByPayType', body);
       return result.data.data;
     }
@@ -44,8 +40,6 @@ module.exports = app => {
     }
     async storeTradeStats(body = {}) {
       this.userInj(body);
-      body.startDate = '2017-12-29 00:00:00';
-      body.endDate = '2018-01-05 23:59:59';
       const result = await this.apiPost('/tradeSeq/getTradeSeqByStoreCount', body);
       return result.data.data;
     }

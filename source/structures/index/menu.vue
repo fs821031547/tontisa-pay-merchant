@@ -11,7 +11,7 @@
       active-text-color="#ffd04b"
       :default-openeds="menusOpen"
       :collapse="collapse">
-      <template v-for="(menu, k) in menus">
+      <template v-for="(menu, k) in menus" v-if="!menu.meta || menu.meta.display !== false">
         <el-submenu
           v-if="menu.child"
           :index="menu.name"
@@ -20,7 +20,7 @@
             <i class="el-icon-location"></i>
             <span>{{menu.label}}</span>
           </template>
-          <template v-for="(child, i) in menu.child">
+          <template v-for="(child, i) in menu.child" v-if="!child.meta || child.meta.display !== false">
             <component :key="i" :is="child.meta.render" :menu="child" v-if="child.meta && child.meta.render"></component>
             <el-menu-item 
               v-else
@@ -33,7 +33,7 @@
           </template>
         </el-submenu>
         <template v-else>
-          <component :key="k" :is="menu.meta.render" :menu="menu" v-if="menu.meta && menu.meta.render"></component>
+          <component :key="k" :is="menu.meta.render" :menu="menu" v-if="menu.meta && menu.meta.render && menu.meta.display !== false"></component>
           <el-menu-item
             v-else
             :index="menu.name"

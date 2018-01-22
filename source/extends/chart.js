@@ -1,16 +1,12 @@
 import Vue from 'vue';
+import echart from 'echarts/dist/echarts.common.js';
 
-const obj = {};
+const plugin = {
+  install (_Vue, options) {
+    _Vue.prototype.$chart = echart;
+  },
+};
 
-import(/* webpackChunkName: "echarts.common" */ 'echarts/dist/echarts.common.js').then(echart => {
-  obj.echart = echart;
-  const plugin = {
-    install (_Vue, options) {
-      _Vue.prototype.$chart = echart;
-    },
-  };
+Vue.use(plugin);
 
-  Vue.use(plugin);
-});
-
-export default obj;
+export default echart;

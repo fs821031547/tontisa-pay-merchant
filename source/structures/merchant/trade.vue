@@ -129,29 +129,30 @@
           <el-table-column type="expand">
             <div class="table-row-expand" slot-scope="props">
               <el-row>
-                <el-col :span="8"><label>发起时间：</label><span>{{ props.row.payTime }}</span></el-col>
-                <el-col :span="8"><label>发起人：</label><span>{{ props.row.createUserName }}</span></el-col>
-                <el-col :span="8"><label>收款账户：</label><span>{{ props.row.accountNumber }}</span></el-col>
+                <el-col :span="8"><label>发起时间：</label><span>{{ props.row.payTime || '-'  }}</span></el-col>
+                <el-col :span="8"><label>发起人：</label><span>{{ props.row.createUserName || '-'  }}</span></el-col>
+                <el-col :span="8"><label>收款账户：</label><span>{{ props.row.accountNumber || '-'  }}</span></el-col>
               </el-row>
               <el-row>
-                <el-col :span="8"><label>支付流水号：</label><span>{{ props.row.payNo }}</span></el-col>
-                <el-col :span="8"><label>商品名称：</label><span>{{ props.row.category }}</span></el-col>
-                <el-col :span="8"><label>设备号：</label><span>{{ props.row.termNo }}</span></el-col>
+                <el-col :span="8"><label>支付流水号：</label><span>{{ props.row.payNo || '-' }}</span></el-col>
+                <el-col :span="8"><label>商品名称：</label><span>{{ props.row.subject || '-' }}</span></el-col>
+                <el-col :span="8"><label>设备号：</label><span>{{ props.row.termNo || '-'  }}</span></el-col>
               </el-row>
             </div>
           </el-table-column>
           <el-table-column
             label="序号"
-            width="80">
-            <span slot-scope="props">{{props.$index}}</span>
+            width="60">
+            <span slot-scope="props">{{(props.$index + 1) + ((tradePage.pageNo - 1) * tradePage.pageSize)}}</span>
           </el-table-column>
           <el-table-column
             label="交易流水"
             prop="seqNo"
-            width="120">
+            width="250">
           </el-table-column>
           <el-table-column
-            prop="storeName"
+            prop="appStoreName"
+            width="260"
             label="收款门店">
           </el-table-column>
           <el-table-column
@@ -170,6 +171,7 @@
           </el-table-column>
           <el-table-column
             prop="totalAmount"
+            :formatter="totalAmountFormat"
             label="收款金额">
           </el-table-column>
           <el-table-column
@@ -214,7 +216,7 @@ export default {
         minAmount: 0,
         maxAmount: 0,
       },
-      tradeAllAmount: 0,
+      tradeAllAmount: '-',
       statusOptions: [
         { label: '全部', value: '' },
         { label: '付款成功', value: '1' },
@@ -318,7 +320,7 @@ export default {
     statusFormat (row, column, cellValue) {
       for (const i in this.statusOptions) {
         const status = this.statusOptions[i];
-        if (status.value === cellValue) {
+        if (status.value === (cellValue + '')) {
           return status.label;
         }
       }
@@ -327,9 +329,15 @@ export default {
     payTypeFormat (row, column, cellValue) {
       for (const i in this.payTypeOptions) {
         const status = this.payTypeOptions[i];
-        if (status.value === cellValue) {
+        if (status.value === (cellValue + '')) {
           return status.label;
         }
+      }
+      return '-';
+    },
+    totalAmountFormat (row, column, cellValue) {
+      if (cellValue !== '' && cellValue !== null && cellValue !== undefined) {
+        return '￥' + this.$filter.moneyFmt(cellValue);
       }
       return '-';
     },
@@ -345,8 +353,8 @@ export default {
       if (cellValue !== '' && cellValue !== null && cellValue !== undefined) {
         const val = cellValue / 100;
         const money = '￥' + this.$filter.moneyFmt(val);
-        const rate = row.totalAmount > 0 ? val / row.totalAmount : 0;
-        return money + '　|　' + rate + '%';
+        // const rate = row.totalAmount > 0 ? val / row.totalAmount : 0;
+        return money + '　|　' + (row.tradeFeerate * 100) + '%';
       }
       return '-';
     },

@@ -140,8 +140,10 @@ module.exports = app => {
         qbody.cycleType = 'D';
       }
       const stats = await service.merchant.trendStats(qbody);
-      if (stats) {
-        this.success(stats);
+      if (stats && stats.result && stats.result.length) {
+        this.success(stats.result);
+      } else {
+        this.success([]);
       }
     }
     async storeTradeStats() {
@@ -154,9 +156,11 @@ module.exports = app => {
           merchantId: params.id,
           startDate,
           endDate,
+          pageNo: 1,
+          pageSize: 100,
         });
-        if (list.length) {
-          this.success(list);
+        if (list && list.result && list.result.length) {
+          this.success(list.result);
         } else {
           this.success([]);
         }

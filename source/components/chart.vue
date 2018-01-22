@@ -43,11 +43,8 @@ export default {
   methods: {
     repaint (options) {
       const chartref = this.chartref;
-      if (options) {
-        chartref.setOption(options);
-      } else {
-        chartref.setOption(this.options);
-      }
+      options = options || this.options;
+      chartref.setOption(options);
     },
   },
   props: {

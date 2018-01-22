@@ -4,7 +4,7 @@ const filters = {
   moneyFmt (value) {
     if (value !== null && value !== undefined) {
       let num = Number(value);
-      if (isNaN(num)) return num;
+      if (isNaN(num)) return value;
       // 转换成 万，亿为单位
       const wan = 10000;
       const yi = 100000000;
