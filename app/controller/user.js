@@ -56,7 +56,6 @@ module.exports = app => {
           throw error;
         }
         if (!verifyData) {
-          // 返回错误数据，用户验证信息不存在，即未注册
           this.fail(101013);
           return;
         }
@@ -76,6 +75,7 @@ module.exports = app => {
         return;
       }
       if (!userId && !userInfo) {
+        // 返回错误数据，用户验证信息不存在，即未注册
         this.fail(101012);
         return;
       }

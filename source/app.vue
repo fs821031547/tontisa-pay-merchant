@@ -8,6 +8,11 @@ export default {
   name: 'app',
   data () {
     return {
+      codes: {
+        101012: '用户未注册！', // 无法获取用户数据
+        101013: '用户或密码验证失败！', // 用户密码验证失败
+        101014: '短信验证码验证失败', // 用户手机验证码验证失败
+      },
     };
   },
   methods: {
@@ -28,12 +33,34 @@ export default {
         closeOnPressEscape: false,
       });
     },
+    globalMessage (type) {
+      const vm = this;
+      return function (response) {
+        const msg = {
+          message: '未知问题',
+          showClose: true,
+        };
+        if (response && response.data && response.data.meta && response.data.meta.code) {
+          const code = response.data.meta.code;
+          if (vm.codes[code]) {
+            msg.message = vm.codes[code];
+          } else {
+            console.warn('code for message: ', response.data);
+          }
+        }
+        if (type) {
+          msg.type = type;
+        }
+        vm.$message(msg);
+      };
+    },
   },
   created () {
     const CancelToken = this.$http.CancelToken;
     const source = CancelToken.source();
     const globalAuth = this.globalAuth;
-    const allowUrl = [ '/api/user/sign', '/api/user/signout' ];
+    const globalWarning = this.globalMessage('warning');
+    const allowUrl = [ '/api/user/sign', '/api/user/signout', '/api/verify/phone/send' ];
     this.$http.interceptors.request.use(
     config => {
       if (!this.$util.getCookie('MERCHANT_PAY_SESS')) {
@@ -60,10 +87,19 @@ export default {
           globalAuth();
         }
       }
+      if (response.config.noglobalmsg !== true) {
+        if (data && !data.meta.success) {
+          globalWarning(response);
+          const err = {
+            response,
+          };
+          throw err;
+        }
+      }
       return response;
     },
     err => {
-      if (err.response.staus === 401) {
+      if (err && err.response && err.response.staus === 401) {
         // 弹出登录框
         if (allowUrl.indexOf(err.config.url) < 0) {
           globalAuth();

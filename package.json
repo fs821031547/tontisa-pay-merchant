@@ -8,8 +8,8 @@
   "scripts": {
     "prod": "EGG_SERVER_ENV=prod node index.js --use_strict --port 7003",
     "pre": "EGG_SERVER_ENV=pre node index.js --use_strict --port 7002",
-    "dev": "egg-bin dev --use_strict --port 7001",
-    "local": "node bin/local-bin.js --use_strict --port 7001",
+    "dev": "node bin/deve-bin.js --dev --use_strict --port 7001",
+    "local": "node bin/deve-bin.js --local --use_strict --port 7001",
     "compile:serve": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.js",
     "compile:build": "cross-env NODE_ENV=production webpack --progress --config config/webpack.js --hide-modules"
   },

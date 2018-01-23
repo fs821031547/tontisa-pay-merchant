@@ -107,7 +107,7 @@ export default {
         phoneVfyCode: '',
         vfyType: 1,
       },
-      rules: this.$store.state.user.userRules,
+      rules: store.state.user.userRules,
       sendCodeDisable: false,
       sendCodeDisableLabel: '',
     };
