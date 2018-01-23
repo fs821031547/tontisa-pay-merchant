@@ -13,24 +13,20 @@ app.use(function* (next) {
     // 解析请求体
     const body = yield parse.json(ctx.request);
     if (body.token == token || !body.token) {
-      const projectPath = path.join('..', __dirname);
+      const projectPath = path.resolve('..', __dirname);
       if (body.event == 'push' || true) {
         // push 事件
         // 执行git拉取代码操作
         git(projectPath, out => {
-          if (out) {
-            console.log('git out ', out);
-            // 编译操作
-            build(projectPath, out => {
-              if (out) {
-                console.log('build out ', out);
-              }
-            }, err => {
-              if (err) {
-                console.log('build err ', err);
-              }
-            });
-          }
+          console.log('git out ', out);
+          // 编译操作
+          build(projectPath, out => {
+            console.log('build out ', out);
+          }, err => {
+            if (err) {
+              console.log('build err ', err);
+            }
+          });
         }, err => {
           if (err) {
             console.log('git err ', err);
@@ -55,8 +51,8 @@ app.listen(7777);
 console.log('ci server start on 7777');
 
 function build(path, outcb, errcb) {
-  const cmd = `echo 'buld shell run'
-cd ${path}
+  const cmd = `echo 'buld shell run' &&
+cd ${path} &&
 npm run compile:build`
   rum(cmd, outcb, errcb);
 }
@@ -64,7 +60,6 @@ npm run compile:build`
 function git(path, outcb, errcb) {
   const cmd = `echo 'git shell run' &&
 cd ${path}  &&
-echo 'git shell 11111'  &&
 git reset --hard  &&
 git clean -f  &&
 git pull`
