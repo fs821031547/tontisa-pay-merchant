@@ -14,24 +14,14 @@ app.use(function* (next) {
     const body = yield parse.json(ctx.request);
     if (body.token == token || !body.token) {
       const projectPath = path.resolve('..', __dirname);
-      if (body.event == 'push' || true) {
+      if (body.event == 'push') {
         // push 事件
         // 执行git拉取代码操作
-        git(projectPath, out => {
-          console.log('git out ', out);
+        git(projectPath, (out, err) => {
           // 编译操作
-          build(projectPath, out => {
-            console.log('build out ', out);
-          }, err => {
-            if (err) {
-              console.log('build err ', err);
-            }
+          build(projectPath, () => {
           });
-        }, err => {
-          if (err) {
-            console.log('git err ', err);
-          }
-        })
+        });
       } else {
         console.log('不支持的事件');
       }
@@ -50,41 +40,50 @@ app.use(function* (next) {
 app.listen(7777);
 console.log('ci server start on 7777');
 
-function build(path, outcb, errcb) {
-  const cmd = `echo 'buld shell run' &&
+function build(path, cb) {
+  const cmd = `echo 'build shell run' &&
 cd ${path} &&
 npm run compile:build`
-  rum(cmd, outcb, errcb);
+  rum(cmd, cb);
 }
 
-function git(path, outcb, errcb) {
+function git(path, cb) {
   const cmd = `echo 'git shell run' &&
 cd ${path}  &&
 git reset --hard  &&
 git clean -f  &&
 git pull`
-  rum(cmd, outcb, errcb);
+  rum(cmd, cb);
 }
 
 
-function rum(cmd, outcb, errcb) {
+function rum(cmd, cb) {
   const child = cp.exec(cmd);
   let out = '';
   let err = '';
   child.stdout.on('data', buffer => {
     out += buffer.toString();
+    console.log(out);
   });
   child.stderr.on('data', buffer => {
     err += buffer.toString();
+    console.log(err);
   });
+  let cbend = false;
   child.stderr.on('end', () => {
-    if (typeof errcb === 'function') {
-      errcb(err);
+    if (typeof cb === 'function') {
+      if (!cbend) {
+        cb(out, err);
+        cbend = true;
+      }
     }
   });
   child.stdout.on('end', () => {
-    if (typeof outcb === 'function') {
-      outcb(out);
+    if (typeof cb === 'function') {
+      if (!cbend) {
+        cb(out, err);
+        cbend = true;
+      }
     }
   });
 }
