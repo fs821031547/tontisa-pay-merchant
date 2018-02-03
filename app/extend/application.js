@@ -17,12 +17,7 @@ module.exports = {
           }
         }
         sendBefore(method, api, body) {
-          const { session } = this.ctx;
-          body.noPreTreat = true;
           if (!body.noPreTreat) {
-            if (session.mstore && session.mstore.erpId) {
-              body.data.erpId = session.mstore.erpId;
-            }
             body.data.appId = this.config.apiConfig.appId;
             body.data.timestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
@@ -85,8 +80,8 @@ module.exports = {
           }
           // temp-start 这块是临时处理，后面要干掉
           let appHost = this.config.apiConfig.appHost;
-          if (!url.startsWith('/user')) {
-            appHost = 'http://192.168.110.203:8080';
+          if (url.startsWith('/user')) {
+            appHost = 'http://192.168.110.47:8080';
           }
           // temp-end
           return appHost + url;

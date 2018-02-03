@@ -1,7 +1,11 @@
 module.exports = app => {
   class User extends app.ApiService {
     async info(body) {
-      const result = await this.apiPost('/user/query/detail', body);
+      const result = await this.apiPost('/user/info', body);
+      return result.data.data;
+    }
+    async verifyPass(body) {
+      const result = await this.apiPost('/user/verifypass', body);
       return result.data.data;
     }
     async modifyInfo(body) {

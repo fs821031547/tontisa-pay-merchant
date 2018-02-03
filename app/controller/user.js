@@ -36,30 +36,45 @@ module.exports = app => {
     }
     async sign() {
       const { service, request, session } = this.ctx;
+      this.success({
+        id: '5a65ea3c847b5e25eca191f6',
+        cellphone: '15919971145',
+        cellphoneIsVerified: 0,
+        email: '234@op110.com',
+        emailIsVerified: 0,
+        nickname: '不学无术修改',
+        realname: 'renlei',
+        realnameIsVerified: 0,
+        sex: 'M',
+        birthday: '',
+        country: 'China',
+        province: 'Guangdong',
+        city: 'Shenzhen',
+        i18n: 'zh',
+        status: 0,
+      });
+      return;
       this.ctx.validate(this.signRule);
       if (!request.body.cellphone && !request.body.email) {
         this.fail(101015);
         return;
       }
-      let userId;
+      const username = request.body.cellphone || request.body.email;
       let userInfo;
       if (!request.body.signType && request.body.password) {
         // 密码验证
-        let verifyData;
         try {
-          verifyData = await service.verify.userPass(request.body);
+          await service.user.verifyPass({
+            username,
+            password: request.body.password,
+          });
         } catch (error) {
-          if (error.code === 'api_fail_res' && error.errors.code === 'xxx') {
+          if (error.code === 'api_fail_res' && [ '10017', '10015' ].includes(error.errors.code)) {
             this.fail(101013);
             return;
           }
           throw error;
         }
-        if (!verifyData) {
-          this.fail(101013);
-          return;
-        }
-        userId = verifyData.userId;
       } else if (request.body.signType && request.body.phoneVfyCode) {
         const vfyResult = await service.verify.phoneCode({
           phone: request.body.cellphone,
@@ -69,19 +84,23 @@ module.exports = app => {
           this.fail(101014);
           return; // 手机验证码验证失败
         }
-        userInfo = await service.user.info({ cellphone: request.body.cellphone });
       } else {
         this.fail(101011);
         return;
       }
-      if (!userId && !userInfo) {
+      try {
+        userInfo = await service.user.info({ username });
+      } catch (error) {
+        if (error.code === 'api_fail_res' && error.errors.code === '10015') {
+          this.fail(101012);
+          return;
+        }
+        throw error;
+      }
+      if (!userInfo) {
         // 返回错误数据，用户验证信息不存在，即未注册
         this.fail(101012);
         return;
-      }
-      if (userId && !userInfo) {
-        // 获取用户信息并保存在会话中
-        userInfo = await service.user.info({ userId });
       }
       const sessionTime = 1000 * 3600 * 24 * (request.body.longSession ? 5 : 1);
       session.user = userInfo;
@@ -98,7 +117,7 @@ module.exports = app => {
       const { session, service, request } = this.ctx;
       this.ctx.validate(this.modifyRule);
       const body = request.body;
-      const userId = session.user.userId;
+      const username = session.user.id;
       if (body.password) {
         // 验证校验类型
         if (!body.vfyType) {
@@ -108,19 +127,14 @@ module.exports = app => {
             return;
           }
           // 验证旧密码
-          let verifyData;
           try {
-            verifyData = await service.verify.userPass({ userId, password: body.passwordOld });
+            await service.user.verifyPass({ username, password: body.passwordOld });
           } catch (error) {
-            if (error.code === 'api_fail_res' && error.errors.code === 'xxx') {
+            if (error.code === 'api_fail_res' && error.errors.code === '10015') {
               this.fail(101022);
               return;
             }
             throw error;
-          }
-          if (!verifyData) {
-            this.fail(101022);
-            return;
           }
         } else {
           if (!body.phoneVfyCode) {
@@ -134,7 +148,7 @@ module.exports = app => {
           }
         }
       }
-      body.userId = session.user.userId;
+      body.id = session.user.id;
       delete body.phoneVfyCode;
       delete body.passwordOld;
       delete body.vfyType;
@@ -150,7 +164,7 @@ module.exports = app => {
         this.fail(101031);
         return; // 邮箱验证码验证失败
       }
-      body.userId = session.user.userId;
+      body.id = session.user.id;
       delete body.emailVfyCode;
       await service.user.modifyBind(body);
       await this.info();
@@ -158,9 +172,9 @@ module.exports = app => {
     async info() {
       const { service, session } = this.ctx;
       // 获取用户信息并保存在会话中
-      // const userInfo = await service.user.info({ userId: session.user.userId });
-      // session.user = userInfo;
-      // this.success(userInfo);
+      const userInfo = await service.user.info({ username: session.user.id });
+      session.user = userInfo;
+      this.success(userInfo);
       this.success(session.user);
     }
     async signWithNewPass() {
@@ -174,9 +188,19 @@ module.exports = app => {
         this.fail(101041);
         return; // 手机验证码验证失败
       }
-      const userInfo = await service.user.info({ cellphone: request.body.cellphone });
-      if (!userInfo) {
-        await service.user.modifyInfo({ userId: userInfo.userId, password: request.body.password });
+      const username = request.body.cellphone;
+      let userInfo;
+      try {
+        userInfo = await service.user.info({ username });
+      } catch (error) {
+        if (error.code === 'api_fail_res' && error.errors.code === '10015') {
+          this.fail(101042);
+          return;
+        }
+        throw error;
+      }
+      if (userInfo) {
+        await service.user.modifyInfo({ id: userInfo.id, password: request.body.password });
         // 获取用户信息并保存在会话中
         const sessionTime = 1000 * 3600 * 24 * (request.body.longSession ? 5 : 1);
         session.user = userInfo;

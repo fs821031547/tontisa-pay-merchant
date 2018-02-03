@@ -27,9 +27,9 @@ module.exports = () => {
       cache: false,
     },
     apiConfig: {
-      appHost: 'https://fapi.op110.com.cn/1.0.0',
-      appId: '888',
-      appSecret: '888',
+      appHost: 'http://192.168.110.156:7100/newpay-service',
+      appId: '50001',
+      appSecret: '999',
     },
     qiniu: {
       accessKey: 'NZrTFjztBSRINUzLMYGRGtuxYBzbE8MeLTXoRgyy',
