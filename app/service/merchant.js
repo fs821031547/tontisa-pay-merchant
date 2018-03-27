@@ -40,7 +40,10 @@ module.exports = app => {
     }
     async storeTradeStats(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/tradeSeq/getTradeSeqByStoreCount', body);
+      const result = await this.apiPost(
+        '/tradeSeq/getTradeSeqByStoreCount',
+        body
+      );
       return result.data.data;
     }
     async tradeList(body = {}) {

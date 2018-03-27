@@ -4,14 +4,13 @@ module.exports = () => {
       consoleLevel: 'INFO', // 所有日志输出到控制台
     },
     redis: {
-      default: {
-      },
+      default: {},
       app: true,
       agent: false,
       client: {
-        port: 6379,          // Redis port
-        host: 'redis',       // Redis host
-        family: 4,           // 4 (IPv4) or 6 (IPv6)
+        port: 6379, // Redis port
+        host: 'redis', // Redis host
+        family: 4, // 4 (IPv4) or 6 (IPv6)
         password: '@TTx.sider',
         db: 0,
       },
@@ -27,9 +26,7 @@ module.exports = () => {
       appId: '999',
       appSecret: '999',
     },
-    sessionIPs: [
-      '114.215.222.221',
-    ],
+    sessionIPs: [ '114.215.222.221' ],
     qiniu: {
       accessKey: 'NZrTFjztBSRINUzLMYGRGtuxYBzbE8MeLTXoRgyy',
       secretKey: 'X9r5o7XThUKiXnlmstGIOAGiK-PiD5E5HRmHeJ__',
@@ -40,7 +37,8 @@ module.exports = () => {
         },
       },
       bucket: 'tontisa-test-xqerp',
-      returnBody: '{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}',
+      returnBody:
+        '{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}',
     },
     vfyPhoneKey: 'BK2088x>',
   };

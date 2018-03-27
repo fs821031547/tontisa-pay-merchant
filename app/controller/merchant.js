@@ -10,8 +10,16 @@ module.exports = app => {
         payType: { type: 'enum', required: false, values: [ '1', '2', '3' ] }, // 1 支付宝 2 微信 3 银联
         status: { type: 'enum', required: false, values: [ '1', '0', '-1' ] }, // 1 付款成功 0 等待付款 -1 付款失败
         pageNo: { type: 'integerStr', required: false, min: 1 },
-        pageSize: { type: 'enum', required: false, values: [ '10', '20', '50', '100', '200' ] },
-        searchType: { type: 'enum', required: false, values: [ 'seqNo', 'accountNumber', 'createUserName' ] }, // seqNo', 'accountNumber', 'createUserName'
+        pageSize: {
+          type: 'enum',
+          required: false,
+          values: [ '10', '20', '50', '100', '200' ],
+        },
+        searchType: {
+          type: 'enum',
+          required: false,
+          values: [ 'seqNo', 'accountNumber', 'createUserName' ],
+        }, // seqNo', 'accountNumber', 'createUserName'
         searchLike: { type: 'string', required: false },
         paytypestats: { type: 'string', required: false, allowEmpty: true },
       };
@@ -51,11 +59,16 @@ module.exports = app => {
     async storeList() {
       const { service, params, helper, query } = this.ctx;
       if (helper.idValid(params, 'merchant')) {
-        const list = await service.merchant.storeList(helper.pageLead({
-          merchantId: params.id,
-          orderBy: 'is_main_store',
-          order: 'desc',
-        }, query));
+        const list = await service.merchant.storeList(
+          helper.pageLead(
+            {
+              merchantId: params.id,
+              orderBy: 'is_main_store',
+              order: 'desc',
+            },
+            query
+          )
+        );
         if (list.lengt) {
           this.success(list);
         } else {

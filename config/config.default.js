@@ -12,7 +12,9 @@ module.exports = appInfo => {
       prefix: '/',
     },
     siteFile: {
-      '/favicon.ico': fs.readFileSync(path.join(process.cwd(), '/app/public/favicon.ico')),
+      '/favicon.ico': fs.readFileSync(
+        path.join(process.cwd(), '/app/public/favicon.ico')
+      ),
     },
     view: {
       root: [

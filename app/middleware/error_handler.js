@@ -17,13 +17,14 @@ module.exports = () => {
       }
     }
 
-    if (ctx.status === 404 &&
-        !ctx.body &&
-        ctx.params &&
-        ctx.params.storeId) {
-
+    if (ctx.status === 404 && !ctx.body && ctx.params && ctx.params.storeId) {
       if (ctx.acceptJSON) {
-        ctx.body = ctx.helper.resWrap(false, undefined, ctx.helper.codeMsg(100404), 100404);
+        ctx.body = ctx.helper.resWrap(
+          false,
+          undefined,
+          ctx.helper.codeMsg(100404),
+          100404
+        );
       } else {
         ctx.redirect(`/${ctx.params.storeId}/404`);
       }

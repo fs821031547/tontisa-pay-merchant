@@ -28,7 +28,6 @@ module.exports = app => {
 
   app.get('/api/util/uptoken', 'util.uploadToken'); // 获取图片上传token
 
-
   app.get('/newpay/trade/preview', 'pay.viewBlank'); // 支付预览页面
   app.get('/newpay/trade/preview/:key', 'pay.viewShow'); // 支付预览二维码页面
   app.get('/newpay/trade/pay/:key', 'pay.pay'); // 目前就阿里支付使用这个链接，将用户重定向到阿里支付

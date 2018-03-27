@@ -87,9 +87,9 @@ module.exports = app => {
         hasMoneyShow: '',
         money: attach.amount / 100,
         btnBgColor: isWx ? '#009900' : '#35a4f3',
-        canPay: (isWx || isZfb) ? '' : ' hide',
-        cantPay: (isWx || isZfb) ? ' hide' : '',
-        fullWidth: (isWx || isZfb) ? '100%' : '550px',
+        canPay: isWx || isZfb ? '' : ' hide',
+        cantPay: isWx || isZfb ? ' hide' : '',
+        fullWidth: isWx || isZfb ? '100%' : '550px',
         infoAction: prefix + '/trade/preview/' + key,
         formAction: prefix + '/scanpay',
         scanAction: prefix + '/trade/scan',
@@ -98,13 +98,17 @@ module.exports = app => {
         qrCode: this.qrCode(prefix + '/trade/pay/' + key, 200),
         infoQrCode: this.qrCode(prefix + '/trade/preview/' + key, 240),
         merchantName: attach.scanName,
-        employeeName: (attach.attach && attach.attach.employeeName) ? attach.attach.employeeName : '',
-        hasEmployeeName: (attach.attach && attach.attach.employeeName) ? '' : ' hide',
+        employeeName:
+          attach.attach && attach.attach.employeeName
+            ? attach.attach.employeeName
+            : '',
+        hasEmployeeName:
+          attach.attach && attach.attach.employeeName ? '' : ' hide',
         orderId: attach.selOrderNo,
         hasOrderId: attach.selOrderNo ? '' : ' hide',
         remark: attach.subject,
         hasRemark: attach.subject ? '' : ' hide',
-        hasRemarks: (attach.selOrderNo || attach.subject) ? '' : ' hide',
+        hasRemarks: attach.selOrderNo || attach.subject ? '' : ' hide',
         details: attach.details ? attach.details : '[]',
       };
       await this.ctx.render('trade-preview', rdata);
@@ -137,7 +141,11 @@ module.exports = app => {
       // 生成支付数据
       const key = request.body.key;
       const payChannel = request.body.payChannel;
-      if (!key || !/^[0-9a-f]{32}$/.test(key) || ![ 'ALIPAY', 'WXPAY', 'YLPAY' ].includes(payChannel)) {
+      if (
+        !key ||
+        !/^[0-9a-f]{32}$/.test(key) ||
+        ![ 'ALIPAY', 'WXPAY', 'YLPAY' ].includes(payChannel)
+      ) {
         this.ctx.body = {
           executeStatus: '1',
           errorCode: '00000',
@@ -147,7 +155,8 @@ module.exports = app => {
       let res;
       try {
         res = await service.pay.scanpay({
-          key, payChannel,
+          key,
+          payChannel,
         });
       } catch (error) {
         const data = error.errors;
@@ -173,7 +182,8 @@ module.exports = app => {
       try {
         const values = await service.pay.genKey(request.body);
         this.ctx.body = {
-          values, executeStatus: '0',
+          values,
+          executeStatus: '0',
         };
       } catch (error) {
         this.ctx.body = {

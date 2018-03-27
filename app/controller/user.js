@@ -3,8 +3,20 @@ module.exports = app => {
     get signRule() {
       return {
         cellphone: { type: 'phone', required: false },
-        password: { type: 'string', required: false, allowEmpty: true, min: 4, max: 64 },
-        phoneVfyCode: { type: 'string', required: false, allowEmpty: true, min: 4, max: 64 },
+        password: {
+          type: 'string',
+          required: false,
+          allowEmpty: true,
+          min: 4,
+          max: 64,
+        },
+        phoneVfyCode: {
+          type: 'string',
+          required: false,
+          allowEmpty: true,
+          min: 4,
+          max: 64,
+        },
         email: { type: 'email', required: false, max: 255 },
         longSession: { type: 'boolean', required: false },
         signType: { type: 'enum', required: false, values: [ 0, 1 ] },
@@ -15,8 +27,20 @@ module.exports = app => {
         headImg: { type: 'url', required: false, min: 12, max: 255 },
         nickname: { type: 'string', required: false, min: 1, max: 64 },
         password: { type: 'string', required: false, min: 4, max: 64 },
-        passwordOld: { type: 'string', required: false, allowEmpty: true, min: 4, max: 64 },
-        phoneVfyCode: { type: 'string', required: false, allowEmpty: true, min: 4, max: 64 },
+        passwordOld: {
+          type: 'string',
+          required: false,
+          allowEmpty: true,
+          min: 4,
+          max: 64,
+        },
+        phoneVfyCode: {
+          type: 'string',
+          required: false,
+          allowEmpty: true,
+          min: 4,
+          max: 64,
+        },
         vfyType: { type: 'enum', required: false, values: [ 0, 1 ] },
       };
     }
@@ -36,7 +60,7 @@ module.exports = app => {
     }
     async sign() {
       const { service, request, session } = this.ctx;
-      this.success({
+      const userInfo_ = {
         id: '5a65ea3c847b5e25eca191f6',
         cellphone: '15919971145',
         cellphoneIsVerified: 0,
@@ -52,8 +76,13 @@ module.exports = app => {
         city: 'Shenzhen',
         i18n: 'zh',
         status: 0,
-      });
-      return;
+      };
+      const sessionTime_ =
+        1000 * 3600 * 24 * (request.body.longSession ? 5 : 1);
+      session.user = userInfo_;
+      session.maxAge = sessionTime_;
+      this.success(userInfo_);
+      // return;
       this.ctx.validate(this.signRule);
       if (!request.body.cellphone && !request.body.email) {
         this.fail(101015);
@@ -69,7 +98,10 @@ module.exports = app => {
             password: request.body.password,
           });
         } catch (error) {
-          if (error.code === 'api_fail_res' && [ '10017', '10015' ].includes(error.errors.code)) {
+          if (
+            error.code === 'api_fail_res' &&
+            [ '10017', '10015' ].includes(error.errors.code)
+          ) {
             this.fail(101013);
             return;
           }
@@ -128,9 +160,15 @@ module.exports = app => {
           }
           // 验证旧密码
           try {
-            await service.user.verifyPass({ username, password: body.passwordOld });
+            await service.user.verifyPass({
+              username,
+              password: body.passwordOld,
+            });
           } catch (error) {
-            if (error.code === 'api_fail_res' && error.errors.code === '10015') {
+            if (
+              error.code === 'api_fail_res' &&
+              error.errors.code === '10015'
+            ) {
               this.fail(101022);
               return;
             }
@@ -141,7 +179,10 @@ module.exports = app => {
             this.fail(101023); // 需要手机验证码
             return;
           }
-          const vfyResult = await service.verify.phoneCode({ phone: session.user.phone, code: body.phoneVfyCode });
+          const vfyResult = await service.verify.phoneCode({
+            phone: session.user.phone,
+            code: body.phoneVfyCode,
+          });
           if (!vfyResult) {
             this.fail(101024);
             return; // 手机验证码验证失败
@@ -159,7 +200,10 @@ module.exports = app => {
       const { session, service, request } = this.ctx;
       this.ctx.validate(this.bindEmailRule);
       const body = request.body;
-      const vfyResult = await service.verify.emailCode({ email: body.email, code: body.emailVfyCode });
+      const vfyResult = await service.verify.emailCode({
+        email: body.email,
+        code: body.emailVfyCode,
+      });
       if (!vfyResult) {
         this.fail(101031);
         return; // 邮箱验证码验证失败
@@ -200,9 +244,13 @@ module.exports = app => {
         throw error;
       }
       if (userInfo) {
-        await service.user.modifyInfo({ id: userInfo.id, password: request.body.password });
+        await service.user.modifyInfo({
+          id: userInfo.id,
+          password: request.body.password,
+        });
         // 获取用户信息并保存在会话中
-        const sessionTime = 1000 * 3600 * 24 * (request.body.longSession ? 5 : 1);
+        const sessionTime =
+          1000 * 3600 * 24 * (request.body.longSession ? 5 : 1);
         session.user = userInfo;
         session.maxAge = sessionTime;
         this.success(userInfo);

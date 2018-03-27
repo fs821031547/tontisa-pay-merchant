@@ -17,7 +17,7 @@ const devConfig = {
   proxyTable: {
     '/api': 'http://localhost:7001',
   },
-  host: '192.168.110.247',
+  host: '192.168.110.160',
   port: 8080,
   autoOpenBrowser: false,
   poll: false,
@@ -55,16 +55,20 @@ module.exports = {
   },
   module: {
     rules: [
-      ...(config.useEslint ? [{
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [ resolve('source') ],
-        options: {
-          formatter: require('eslint-friendly-formatter'),
-          emitWarning: !config.showEslintErrorsInOverlay,
-        },
-      }] : []),
+      ...(config.useEslint
+        ? [
+          {
+            test: /\.(js|vue)$/,
+            loader: 'eslint-loader',
+            enforce: 'pre',
+            include: [ resolve('source') ],
+            options: {
+              formatter: require('eslint-friendly-formatter'),
+              emitWarning: !config.showEslintErrorsInOverlay,
+            },
+          },
+        ]
+        : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -146,7 +150,8 @@ module.exports = {
       name: 'common',
       minChunks(module, count) {
         return (
-          module.resource && count >= 1 &&
+          module.resource &&
+          count >= 1 &&
           module.resource.indexOf('node_modules') >= 0
         );
       },
@@ -161,16 +166,17 @@ module.exports = {
       template: 'source/index.html',
       inject: true,
       chunksSortMode: 'manual',
-      chunks: [
-        'manifest', 'common',
-        'app',
-      ],
+      chunks: [ 'manifest', 'common', 'app' ],
       title: '小强扫码付',
       favicon: 'source/assets/favicon.ico',
     }),
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
-        messages: [ `Your application is running here: http://${config.host}:${config.port}` ],
+        messages: [
+          `Your application is running here: http://${config.host}:${
+            config.port
+          }`,
+        ],
       },
     }),
   ],
@@ -181,18 +187,20 @@ module.exports = {
 };
 
 if (config.extract) {
-  module.exports.plugins.push(new ExtractTextPlugin({
-    filename: '[name].[contenthash:8].css',
-    // set the following option to `true` if you want to extract CSS from
-    // codesplit chunks into this main css file as well.
-    // This will result in *all* of your app's CSS being loaded upfront.
-    allChunks: true,
-  }),
-  new OptimizeCSSPlugin({
-    cssProcessorOptions: config.sourceMap
-      ? { safe: true, map: { inline: false } }
-      : { safe: true },
-  }));
+  module.exports.plugins.push(
+    new ExtractTextPlugin({
+      filename: '[name].[contenthash:8].css',
+      // set the following option to `true` if you want to extract CSS from
+      // codesplit chunks into this main css file as well.
+      // This will result in *all* of your app's CSS being loaded upfront.
+      allChunks: true,
+    }),
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: config.sourceMap
+        ? { safe: true, map: { inline: false } }
+        : { safe: true },
+    })
+  );
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -200,7 +208,6 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   module.exports = serve(module.exports);
 }
-
 
 function cssLoaders() {
   const loadersObj = {
@@ -224,7 +231,9 @@ function cssLoaders() {
         },
       },
     ];
-    loaderOptions = loaderOptions ? Object.assign(loaderOptions, { sourceMap: config.sourceMap }) : { sourceMap: config.sourceMap };
+    loaderOptions = loaderOptions
+      ? Object.assign(loaderOptions, { sourceMap: config.sourceMap })
+      : { sourceMap: config.sourceMap };
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
@@ -238,7 +247,6 @@ function cssLoaders() {
       });
     }
     return [ 'vue-style-loader' ].concat(loaders);
-
   }
   return loadersObj;
 }

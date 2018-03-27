@@ -19,7 +19,9 @@ module.exports = {
         sendBefore(method, api, body) {
           if (!body.noPreTreat) {
             body.data.appId = this.config.apiConfig.appId;
-            body.data.timestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+            body.data.timestamp = moment(new Date()).format(
+              'YYYY-MM-DD HH:mm:ss'
+            );
 
             const data = body.data;
             if (data.sign) delete data.sign;
@@ -39,15 +41,28 @@ module.exports = {
               }
               signStrs.push(`${k}=${v}`);
             }
-            const signStr = this.config.apiConfig.appSecret + signStrs.join('&') + this.config.apiConfig.appSecret;
+            const signStr =
+              this.config.apiConfig.appSecret +
+              signStrs.join('&') +
+              this.config.apiConfig.appSecret;
             body['sign-str'] = signStr;
             body.data.sign = this.ctx.helper.md5(signStr);
           }
-          this.ctx.app.logger.info('api_req --> ', method, api, JSON.stringify(body));
+          this.ctx.app.logger.info(
+            'api_req --> ',
+            method,
+            api,
+            JSON.stringify(body)
+          );
         }
         sendAfter(method, api, data) {
           if (this.config.env === 'local') {
-            this.ctx.app.logger.debug('api_res <-- ', method, api, JSON.stringify(data));
+            this.ctx.app.logger.debug(
+              'api_res <-- ',
+              method,
+              api,
+              JSON.stringify(data)
+            );
           } else {
             this.ctx.app.logger.info('api_res <-- ', method, api);
           }
@@ -78,8 +93,8 @@ module.exports = {
           if (url.startsWith('http')) {
             return url;
           }
-          // temp-start 这块是临时处理，后面要干掉
           let appHost = this.config.apiConfig.appHost;
+          // temp-start 这块是临时处理，后面要干掉
           if (url.startsWith('/user')) {
             appHost = 'http://192.168.110.47:8080';
           }
@@ -171,9 +186,21 @@ module.exports = {
       // this 就是 app 对象，在其中可以调用 app 上的其他方法，或访问属性
       class CustomController extends this.Controller {
         success(data, meta) {
-          this.ctx.body = this.ctx.helper.resWrap(true, data, undefined, undefined, meta);
+          this.ctx.body = this.ctx.helper.resWrap(
+            true,
+            data,
+            undefined,
+            undefined,
+            meta
+          );
         }
-        fail(msg = this.ctx.helper.codeMsg(100400), code = 100400, status = 200, errors, log) {
+        fail(
+          msg = this.ctx.helper.codeMsg(100400),
+          code = 100400,
+          status = 200,
+          errors,
+          log
+        ) {
           this.ctx.status = status;
           if (typeof msg === 'number') {
             code = msg;
@@ -186,7 +213,13 @@ module.exports = {
           }
         }
         notFound(msg, code, status) {
-          this.fail(msg || this.ctx.helper.codeMsg(100404), 100404, status || 404, undefined, true);
+          this.fail(
+            msg || this.ctx.helper.codeMsg(100404),
+            100404,
+            status || 404,
+            undefined,
+            true
+          );
         }
       }
       this[CUSTOM_CONTROLLER] = CustomController;

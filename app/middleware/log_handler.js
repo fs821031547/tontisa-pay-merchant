@@ -4,7 +4,12 @@ module.exports = () => {
     // 输出所有请求日志
     const { app, request, response, params, query, ip } = ctx;
 
-    ctx.logger.info({ request, ip }, { body: JSON.stringify(request.body) }, { params }, { query });
+    ctx.logger.info(
+      { request, ip },
+      { body: JSON.stringify(request.body) },
+      { params },
+      { query }
+    );
 
     await next();
 
@@ -18,7 +23,10 @@ module.exports = () => {
       ctx.logger.debug({ response: hres });
     } else {
       if (app.config.env === 'local') {
-        ctx.logger.debug({ response: hres }, { body: JSON.stringify(ctx.body) });
+        ctx.logger.debug(
+          { response: hres },
+          { body: JSON.stringify(ctx.body) }
+        );
       } else {
         ctx.logger.info({ response: hres });
       }

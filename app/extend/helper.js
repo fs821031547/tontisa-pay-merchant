@@ -3,7 +3,6 @@ const moment = require('moment');
 const qiniu = require('qiniu');
 const codes = require('../codes');
 module.exports = {
-
   /**
    * [resWrap 响应提包裹处理，将响应内容转换成统一的标准格式]
    * @param  {[type]} success  [业务是否成功]
@@ -50,7 +49,11 @@ module.exports = {
    * @param  {[type]} def   设置page数据的默认值可以配置，pageNo 默认为 1，pageSize 默认为 10，pageSizeMax 默认为 500
    * @return {[type]}       返回带page数据的obj对象
    */
-  pageLead(obj = {}, paged = {}, def = { pageNo: 1, pageSize: 10, pageSizeMax: 500 }) {
+  pageLead(
+    obj = {},
+    paged = {},
+    def = { pageNo: 1, pageSize: 10, pageSizeMax: 500 }
+  ) {
     let pageNo = def.pageNo;
     if (paged.hasOwnProperty('pageNo')) {
       pageNo = Number(paged.pageNo);
@@ -211,12 +214,27 @@ module.exports = {
    * @return {[type]}   为空返回 true，不为空返回 false
    */
   isEmpty(v) {
-    if (
-      v === '' ||
-      v === null ||
-      v === undefined
-    ) return true;
+    if (v === '' || v === null || v === undefined) return true;
     return false;
+  },
+
+  /**
+   * 生成随机字符串，支持纯字符串，字符串加数字，纯数字
+   * @param  {Number} len  要生生的字符串长度
+   * @param  {String} type 随机字符串内容类型，str: 含a-zA-Z的纯字母 strnum: 含a-zA-Z0-9的字母加数字 num: 含0-9的数字
+   * @return {String}
+   */
+  randomStr(len = 4, type = 'str') {
+    let text = '';
+    const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const num = '0123456789';
+    const dictionary = [ str, str + num, num ][
+      { str: 0, strnum: 1, num: 2 }[type]
+    ];
+    for (let i = 0; i <= len; i++) {
+      text += dictionary.charAt(Math.floor(Math.random() * dictionary.length));
+    }
+    return text;
   },
 
   /**

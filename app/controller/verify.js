@@ -20,7 +20,10 @@ module.exports = app => {
       const { service } = this.ctx;
       this.ctx.validate(this.phoneCodeRule);
       await service.verify.phoneCodeSend();
-      const vfyResult = await service.verify.phoneCode({ phone: request.body.cellphone, code: request.body.phoneVfyCode });
+      const vfyResult = await service.verify.phoneCode({
+        phone: request.body.cellphone,
+        code: request.body.phoneVfyCode,
+      });
       if (vfyResult) {
         this.success();
       } else {
@@ -30,7 +33,7 @@ module.exports = app => {
     async phoneSend() {
       const { service, query } = this.ctx;
       this.ctx.validate(this.phoneSendRule, query);
-      await service.verify.phoneCodeSend();
+      await service.verify.phoneCodeSend({ phone: query.cellphone });
       this.success();
     }
     async emailSend() {

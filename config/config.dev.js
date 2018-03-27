@@ -37,7 +37,8 @@ module.exports = () => {
         },
       },
       bucket: 'tontisa-test-xqerp',
-      returnBody: '{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}',
+      returnBody:
+        '{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}',
     },
     vfyPhoneKey: '2088',
   };

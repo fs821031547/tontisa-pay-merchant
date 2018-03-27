@@ -1,7 +1,24 @@
 module.exports = () => {
   return async function userSession(ctx, next) {
     ctx.logger.debug('>middleware-> userSession');
-    const { app, cookies, request, header, session, service, path, ip, params, query, locals, hostname, protocol, helper } = ctx; // eslint-disable-line
+    /* eslint-disable */
+    const {
+      app,
+      cookies,
+      request,
+      header,
+      session,
+      service,
+      path,
+      ip,
+      params,
+      query,
+      locals,
+      hostname,
+      protocol,
+      helper,
+    } = ctx;
+    /* eslint-enable */
     if (session.user) {
       try {
         await next();
@@ -18,7 +35,12 @@ module.exports = () => {
     } else {
       ctx.status = 401;
       const errCode = 100401;
-      ctx.body = helper.resWrap(false, undefined, helper.codeMsg(errCode), errCode);
+      ctx.body = helper.resWrap(
+        false,
+        undefined,
+        helper.codeMsg(errCode),
+        errCode
+      );
     }
   };
 };

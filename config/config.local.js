@@ -31,6 +31,9 @@ module.exports = () => {
       appId: '50001',
       appSecret: '999',
     },
+    pubSerConfig: {
+      appHost: 'http://vutest.op110.com.cn/util-service',
+    },
     qiniu: {
       accessKey: 'NZrTFjztBSRINUzLMYGRGtuxYBzbE8MeLTXoRgyy',
       secretKey: 'X9r5o7XThUKiXnlmstGIOAGiK-PiD5E5HRmHeJ__',
