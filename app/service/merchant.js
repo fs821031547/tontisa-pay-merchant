@@ -1,4 +1,5 @@
 module.exports = app => {
+  const appHost = app.config.merchantConfig.appHost;
   class Merchant extends app.ApiService {
     userInj(body) {
       if (body) {
@@ -10,45 +11,45 @@ module.exports = app => {
     }
     async list(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/merchant/queryList', body);
+      const result = await this.apiPost(appHost + '/merchant/queryList', body);
       return result.data.data;
     }
     async info(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/merchant/queryDetil', body);
+      const result = await this.apiPost(appHost + '/merchant/queryDetil', body);
       return result.data.data;
     }
     async storeList(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/merchant/store/queryList', body);
+      const result = await this.apiPost(appHost + '/merchant/store/queryList', body);
       return result.data.data;
     }
     async tradeStats(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/tradeSeq/getTradeSeqCount', body);
+      const result = await this.apiPost(appHost + '/tradeSeq/getTradeSeqCount', body);
       return result.data.data;
     }
     async payTypeStats(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/tradeSeq/getTradeSeqByPayType', body);
+      const result = await this.apiPost(appHost + '/tradeSeq/getTradeSeqByPayType', body);
       return result.data.data;
     }
     async trendStats(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/tradeSeq/getTradeSeqByCycle', body);
+      const result = await this.apiPost(appHost + '/tradeSeq/getTradeSeqByCycle', body);
       return result.data.data;
     }
     async storeTradeStats(body = {}) {
       this.userInj(body);
       const result = await this.apiPost(
-        '/tradeSeq/getTradeSeqByStoreCount',
+        appHost + '/tradeSeq/getTradeSeqByStoreCount',
         body
       );
       return result.data.data;
     }
     async tradeList(body = {}) {
       this.userInj(body);
-      const result = await this.apiPost('/tradeSeq/query', body);
+      const result = await this.apiPost(appHost + '/tradeSeq/query', body);
       return result.data.data;
     }
   }

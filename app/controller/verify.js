@@ -17,9 +17,11 @@ module.exports = app => {
       };
     }
     async phoneCode() {
-      const { service } = this.ctx;
+      const { service, request } = this.ctx;
       this.ctx.validate(this.phoneCodeRule);
-      await service.verify.phoneCodeSend();
+      console.log('request.body.cellphone:', request.body.cellphone);
+      console.log('request.body.phoneVfyCode:', request.body.phoneVfyCode);
+      // await service.verify.phoneCodeSend();
       const vfyResult = await service.verify.phoneCode({
         phone: request.body.cellphone,
         code: request.body.phoneVfyCode,
@@ -33,8 +35,20 @@ module.exports = app => {
     async phoneSend() {
       const { service, query } = this.ctx;
       this.ctx.validate(this.phoneSendRule, query);
-      await service.verify.phoneCodeSend({ phone: query.cellphone });
-      this.success();
+      // await service.verify.phoneCodeSend({ phone: query.cellphone });
+      try {
+        await service.verify.phoneCodeSend({ phone: query.cellphone });
+        this.success();
+      } catch (error) {
+        if (
+          error.code === 'api_fail_res' &&
+          [ '110000' ].includes(error.errors.status)
+        ) {
+          this.success(error.errors);
+          return;
+        }
+      }
+      // this.success();
     }
     async emailSend() {
       const { service, query } = this.ctx;

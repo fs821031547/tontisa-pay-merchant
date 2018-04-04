@@ -4,6 +4,9 @@ module.exports = app => {
   app.get('/', 'index.index'); // 登录
 
   app.post('/api/user/sign', 'user.sign'); // 登录
+  app.post('/api/user/signup', 'user.signUp'); // 注册
+  app.post('/api/user/notexist', 'user.notExist'); // 验证手机号码不存在
+
   app.post('/api/user/sign/newpass', 'user.signWithNewPass'); // 修改密码并登录
   app.get('/api/user/signout', 'user.signout'); // 退出
   app.get('/api/user/info', userSession, 'user.info'); // 获取用户信息

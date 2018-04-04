@@ -30,6 +30,12 @@ module.exports = app => {
       const listData = await service.merchant.list({
         pageNo: 1,
         pageSize: 100,
+        licenseName: '同天下',
+        status: 1,
+        orderBy: 'merchantNo',
+        appId: 50001,
+        sign: '88888888',
+        timestamp: '2018-03-02 14:42:15',
       });
       let datas = listData.result || [];
       if (datas.length) {

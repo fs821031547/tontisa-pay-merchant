@@ -170,7 +170,7 @@ const module = {
       ],
       phoneVfyCode: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
-        { min: 8, max: 8, message: '验证码长度不正确', trigger: 'blur,change' },
+        { min: 5, max: 8, message: '验证码长度不正确', trigger: 'blur,change' },
       ],
       emailVfyCode: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -334,6 +334,23 @@ const module = {
       } else {
         return {};
       }
+    },
+    notExist ({ state }, data) {
+      return this._vm.$http.post('/api/user/notexist', data).then(res => {
+        console.log('notexist:', res);
+        if (res.data.meta) {
+          // state.user = res.data.data;
+          return res.data.meta.success;
+        }
+      }).catch();
+    },
+    userSignUp ({ state }, data) {
+      return this._vm.$http.post('/api/user/signup', data).then(res => {
+        if (res.data.meta) {
+          // state.user = res.data.data;
+          return res.data.meta.success;
+        }
+      });
     },
     userSign ({ state }, data) {
       return this._vm.$http.post('/api/user/sign', data).then(res => {

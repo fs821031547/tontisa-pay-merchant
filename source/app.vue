@@ -60,7 +60,8 @@ export default {
     const source = CancelToken.source();
     const globalAuth = this.globalAuth;
     const globalWarning = this.globalMessage('warning');
-    const allowUrl = [ '/api/user/sign', '/api/user/signout', '/api/verify/phone/send' ];
+    const allowUrl = [ '/api/user/sign', '/api/user/signout',
+      '/api/verify/phone/send', '/api/user/notexist', '/api/user/signup', '/api/verify/phone/code' ];
     this.$http.interceptors.request.use(
     config => {
       if (!this.$util.getCookie('MERCHANT_PAY_SESS')) {

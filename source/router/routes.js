@@ -64,6 +64,11 @@ const routes = [
     name: 'sign',
     component: () => import(/* webpackChunkName: "pages/sign" */ '../pages/sign'),
   },
+  {
+    path: '/merchant-apply',
+    name: 'merchant-apply',
+    component: () => import(/* webpackChunkName: "pages/sign" */ '../structures/merchant/merchant-apply'),
+  },
 ];
 
 export default routes;

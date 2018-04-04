@@ -27,12 +27,16 @@ module.exports = () => {
       cache: false,
     },
     apiConfig: {
-      appHost: 'http://192.168.110.156:7100/newpay-service',
+      // appHost: 'http://192.168.110.156:7100/newpay-service',
+      appHost: 'http://192.168.110.156:9091',
       appId: '50001',
       appSecret: '999',
     },
     pubSerConfig: {
       appHost: 'http://vutest.op110.com.cn/util-service',
+    },
+    merchantConfig: {
+      appHost: 'http://vutest.op110.com.cn/newpay-service',
     },
     qiniu: {
       accessKey: 'NZrTFjztBSRINUzLMYGRGtuxYBzbE8MeLTXoRgyy',

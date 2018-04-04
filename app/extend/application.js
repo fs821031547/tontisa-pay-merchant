@@ -1,3 +1,5 @@
+// import { error } from 'util';
+
 const moment = require('moment');
 const util = require('../util.js'); // eslint-disable-line
 
@@ -9,6 +11,11 @@ module.exports = {
     if (!this[API_SERVICE]) {
       class ApiService extends this.Service {
         apiFailRes(api, errors) {
+          console.log('apiFailResapiFailResapiFailResapiFailRes:', errors);
+          // 短信验证码发送成功不做success判断
+          // if (api.indexOf('sms/sendtext') > -1 && errors.status === '110000') {
+          //   return;
+          // }
           if (!errors || !errors.success) {
             this.ctx.throw(502, `Request Api Data Get Fail Result in ${api}`, {
               code: 'api_fail_res',
@@ -66,13 +73,18 @@ module.exports = {
           } else {
             this.ctx.app.logger.info('api_res <-- ', method, api);
           }
+          console.log(`sendAftersendAftersendAftersendAftersendAfter:method:${method},api:${api},body:${data}`);
+
           // temp-start 临时处理修改返回数据的数据结构
           if (data.hasOwnProperty('executeStatus')) {
             if (data.executeStatus === '0') {
               data.success = true;
+              data.executeStatus = data.executeStatus;
             } else {
               data.success = false;
+              data.executeStatus = data.executeStatus;
             }
+            console.log(`data.success:${data.success}`);
             delete data.executeStatus;
             if (data.values) {
               data.data = data.values;
@@ -95,9 +107,9 @@ module.exports = {
           }
           let appHost = this.config.apiConfig.appHost;
           // temp-start 这块是临时处理，后面要干掉
-          if (url.startsWith('/user')) {
-            appHost = 'http://192.168.110.47:8080';
-          }
+          // if (url.startsWith('/user')) {
+          //   appHost = 'http://192.168.110.47:8080';
+          // }
           // temp-end
           return appHost + url;
         }
@@ -186,6 +198,7 @@ module.exports = {
       // this 就是 app 对象，在其中可以调用 app 上的其他方法，或访问属性
       class CustomController extends this.Controller {
         success(data, meta) {
+          // console.log('successsuccesssuccesssuccesssuccess1123:', data.code + 'metamtetata:', meta);
           this.ctx.body = this.ctx.helper.resWrap(
             true,
             data,

@@ -17,7 +17,8 @@ const devConfig = {
   proxyTable: {
     '/api': 'http://localhost:7001',
   },
-  host: '192.168.110.160',
+  // host: '192.168.110.160',
+  host: '0.0.0.0',
   port: 8080,
   autoOpenBrowser: false,
   poll: false,

@@ -58,6 +58,52 @@ module.exports = app => {
         emailVfyCode: { type: 'string', min: 4, max: 16 },
       };
     }
+    async notExist() {
+      const { service, request } = this.ctx;
+      const body = request.body;
+      if (!body.cellphone) {
+        this.fail(100400);
+        return;
+      }
+      try {
+        await service.user.notExist({
+          cellphone: body.cellphone,
+        });
+      } catch (error) {
+        if (
+          error.code === 'api_fail_res' &&
+          [ '10003' ].includes(error.errors.code)
+        ) {
+          this.success(error.errors);
+          return;
+        }
+      }
+    }
+    async signUp() {
+      const { service, request } = this.ctx;
+      const body = request.body;
+      if (!body.cellphone || !body.password || !body.nickname) {
+        this.fail(100400);
+        return;
+      }
+      try {
+        await service.user.add({
+          cellphone: body.cellphone,
+          password: body.password,
+          nickname: body.nickname,
+        });
+      } catch (error) {
+        if (
+          error.code === 'api_fail_res' &&
+          [ '10017', '10015' ].includes(error.errors.code)
+        ) {
+          this.fail(100400);
+          return;
+        }
+        throw error;
+      }
+      this.success();
+    }
     async sign() {
       const { service, request, session } = this.ctx;
       const userInfo_ = {
@@ -102,6 +148,7 @@ module.exports = app => {
             error.code === 'api_fail_res' &&
             [ '10017', '10015' ].includes(error.errors.code)
           ) {
+            // this.status = 400;
             this.fail(101013);
             return;
           }

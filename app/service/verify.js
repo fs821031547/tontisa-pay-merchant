@@ -26,6 +26,9 @@ module.exports = app => {
     }
     async phoneCode({ phone, code }) {
       // 验证手机验证码
+      console.log(11111);
+      console.log('request.body.cellphone:', phone);
+      console.log('request.body.phoneVfyCode:', code);
       return this.codeCheck(phone, code, 'phone');
     }
     async emailCode({ email, code }) {

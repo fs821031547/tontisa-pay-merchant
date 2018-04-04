@@ -16,6 +16,14 @@ module.exports = app => {
       const result = await this.apiPost('/user/edit/bind', body);
       return result.data.data;
     }
+    async add(body) {
+      const result = await this.apiPost('/user/add', body);
+      return result.data.data;
+    }
+    async notExist(body) {
+      const result = await this.apiPost('/user/phone/notexist', body);
+      return result.data.data;
+    }
   }
   return User;
 };

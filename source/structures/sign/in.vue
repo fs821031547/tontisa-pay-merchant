@@ -3,10 +3,10 @@
   <el-card class="struct-sign-in">
     <div slot="header" class="sign-header">
       <span>登录</span>
-      <!-- <span class="goto">
+      <span class="goto">
         还没有账号，
         <el-button type="text" @click="gotoSignUp">前往注册</el-button>
-      </span> -->
+      </span>
     </div>
     <div v-show="mode === 1" class="sign-bodyer">
       <el-form v-show="signInMode === 0" ref="passwordSign" :model="signData">
@@ -66,7 +66,7 @@
         </el-form-item>
         <el-button @click="fortPassNext" style="width: 100%; margin: 10px 0;">下一步</el-button>
       </el-form>
-      <el-form v-show="fortPassMode === 1" ref="fortPassSecnod" :model="modifyPassData">
+      <el-form v-show="fortPassMode === 1" ref="fortPassSecond" :model="modifyPassData">
         <el-form-item :rules="rules.password" prop="password">
           <cp-pract-input
             placeholder="请输入密码"
@@ -141,8 +141,10 @@ export default {
       let startSecond;
       if (firstTime && now - firstTime <= 60000) { // 60 s
         startSecond = (now - firstTime) / 1000;
-        startSecond = startSecond.toFixed();
-      } else if (!noauto) {
+        // startSecond = startSecond.toFixed();
+        startSecond = startSecond ? (60 - startSecond.toFixed()) : startSecond.toFixed();
+      }
+      if (!noauto) {
         startSecond = 60;
         localStorage.setItem('sendCodeBtnTime', now);
       }
@@ -197,7 +199,7 @@ export default {
       });
     },
     modifyPassAndSign () {
-      const form = this.refs['fortPassSecnod'];
+      const form = this.refs['fortPassSecond'];
       form.validate((valid) => {
         if (valid) {
           store.dispatch('userSignWithNewPass', this.modifyPassData).then(() => {
@@ -236,6 +238,7 @@ export default {
       float right
       font-size 14px
       line-height 22px
+      color #cccccc
       .el-button
         padding 0
   .sign-bodyer
